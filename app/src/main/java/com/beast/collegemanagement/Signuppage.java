@@ -84,9 +84,10 @@ public class Signuppage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (userName.contains(" ")){
+                if (binding.userName.getText().toString().trim().contains(" ")){
                     Toast.makeText(Signuppage.this, "spaces are not allowed in Username", Toast.LENGTH_SHORT).show();
-                }else {
+                }
+                else {
 
                     fullName = binding.fullName.getText().toString().trim();
                     userName = binding.userName.getText().toString().trim();

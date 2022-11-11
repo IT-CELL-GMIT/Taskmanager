@@ -17,7 +17,6 @@
         android:layout_marginEnd="155dp"
         android:layout_marginBottom="27dp"
         android:src="@drawable/logo"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -93,7 +92,9 @@
                     android:layout_marginTop="10dp"
                     android:text="Forgot Password?"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"></TextView>
+                    android:textSize="18sp">
+
+                </TextView>
 
                 <Button
                     android:id="@+id/login"
@@ -107,7 +108,9 @@
                     android:text="Log In"
                     android:fontFamily="@font/averia_libre_light"
                     android:textColor="@color/icons"
-                    android:transitionName="btn_log"></Button>
+                    android:transitionName="btn_log">
+
+                </Button>
 
                 <Button
                     android:id="@+id/signup"
@@ -118,14 +121,15 @@
                     android:background="#00000000"
                     android:text="New user? sign up"
                     android:textColor="@color/colorPrimaryDark"
-                    android:transitionName="btn_sign"></Button>
+                    android:transitionName="btn_sign">
+
+                </Button>
 
                 <LinearLayout
                     android:id="@+id/googlesignin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@drawable/card3"
                     android:layout_marginRight="40dp"
                     android:layout_marginLeft="40dp">
 
@@ -137,7 +141,9 @@
                         android:includeFontPadding="false"
                         android:layout_marginLeft="30dp"
                         android:textColor="@color/icons"
-                        android:fontFamily="@font/averia_libre_light"></TextView>
+                        android:fontFamily="@font/averia_libre_light">
+
+                    </TextView>
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="50dp"
