@@ -9,7 +9,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="155dp"
+        android:layout_marginBottom="27dp"
+        android:src="@drawable/logo"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,6 +105,7 @@
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/card1"
                     android:text="Log In"
+                    android:fontFamily="@font/averia_libre_light"
                     android:textColor="@color/icons"
                     android:transitionName="btn_log"></Button>
 
@@ -107,6 +120,35 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:transitionName="btn_sign"></Button>
 
+                <LinearLayout
+                    android:id="@+id/googlesignin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/card3"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginLeft="40dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Google"
+                        android:textSize="30sp"
+                        android:includeFontPadding="false"
+                        android:layout_marginLeft="30dp"
+                        android:textColor="@color/icons"
+                        android:fontFamily="@font/averia_libre_light"></TextView>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="50dp"
+                        android:layout_height="45dp"
+                        android:padding="8dp"
+                        android:src="@drawable/google">
+
+                    </de.hdodenhof.circleimageview.CircleImageView>
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -116,3 +158,5 @@
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
+
+

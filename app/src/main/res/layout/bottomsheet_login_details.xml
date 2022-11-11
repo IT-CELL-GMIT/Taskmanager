@@ -75,6 +75,7 @@
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/card1"
                         android:text="Log In"
+                        android:fontFamily="@font/averia_libre_light"
                         android:textColor="@color/icons"
                         android:transitionName="btn_log">
 
