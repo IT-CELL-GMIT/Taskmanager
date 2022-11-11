@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="12dp"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="1dp"
+        android:layout_marginTop="10dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="12dp"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@color/colorPrimary"
+        app:cardCornerRadius="1dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
+
+    </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_gravity="center_horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileBackground"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/color_primary_person"
+            android:background="@drawable/mainbg"
+            android:transitionName="image">
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_profile"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_baseline_person_24"
+            android:transitionName="image">
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <RelativeLayout
+            android:id="@+id/changeProfilePic"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignEnd="@+id/profileBackground"
+            android:layout_alignBottom="@id/profileBackground">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/mainbg"
+                android:backgroundTint="@color/colorPrimary">
+
+            </de.hdodenhof.circleimageview.CircleImageView>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_baseline_photo_library_24"
+                android:tint="@color/icons">
+
+            </de.hdodenhof.circleimageview.CircleImageView>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/main_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Your Fullname"
+        android:textStyle="bold"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="15dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/username"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fullname"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:transitionName="name">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/userName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right">
+
+        <Button
+            android:id="@+id/btn_cencle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="cencel"
+            android:textColor="@color/grey">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="save"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/colorPrimary">
+
+        </Button>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LogOut"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/toolBarProfilePic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/img"
+            android:layout_marginStart="10dp"
+            app:civ_circle_background_color="@color/icons"
+            android:layout_gravity="center_vertical">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/toolBarUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Log Out"
+            android:fontFamily="@font/averia_libre_light"
+            android:layout_marginStart="5dp"
+            android:textSize="32sp"
+            android:layout_marginBottom="1dp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical">
+
+        </TextView>
+
+    </LinearLayout>
+
+</LinearLayout>
