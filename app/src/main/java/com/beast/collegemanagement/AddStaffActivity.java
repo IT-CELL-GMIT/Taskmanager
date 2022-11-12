@@ -58,7 +58,7 @@ public class AddStaffActivity extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
         list = new ArrayList<>();
-        adapter = new StaffAdapter(list, AddStaffActivity.this);
+        adapter = new StaffAdapter(list, AddStaffActivity.this, "AddStaff");
         recyclerView.setAdapter(adapter);
         
 //        getUserData();
@@ -79,7 +79,9 @@ public class AddStaffActivity extends AppCompatActivity {
                 "");
 
         list.add(model);
-        adapter.notifyDataSetChanged();model = new StaffModel("20",
+        adapter.notifyDataSetChanged();
+
+        model = new StaffModel("20",
                 "Sanjay1",
                 "Sanjay Parmar",
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQwEcb78mt0Dxay3RaI6yRBLY34JlKT1eQgUAFnvNXww&s",
@@ -89,7 +91,9 @@ public class AddStaffActivity extends AppCompatActivity {
                 "HOD");
 
         list.add(model);
-        adapter.notifyDataSetChanged();model = new StaffModel("20",
+        adapter.notifyDataSetChanged();
+
+        model = new StaffModel("20",
                 "Sanjay1",
                 "Sanjay Parmar",
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQwEcb78mt0Dxay3RaI6yRBLY34JlKT1eQgUAFnvNXww&s",

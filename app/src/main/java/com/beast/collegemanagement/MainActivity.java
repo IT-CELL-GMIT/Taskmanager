@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         binding.addtask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), add_task.class));
+                startActivity(new Intent(getApplicationContext(), SelectStaffActivity.class));
             }
         });
         
