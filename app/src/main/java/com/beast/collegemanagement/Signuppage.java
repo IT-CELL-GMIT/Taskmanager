@@ -90,7 +90,7 @@ public class Signuppage extends AppCompatActivity {
                 else {
 
                     fullName = binding.fullName.getText().toString().trim();
-                    userName = binding.userName.getText().toString().trim();
+                    userName = binding.userName.getText().toString().trim().toLowerCase();
                     phoneNumber = binding.phoneNumber.getText().toString().trim();
                     eMail = binding.eMail.getText().toString().trim();
                     password = binding.password.getText().toString().trim();

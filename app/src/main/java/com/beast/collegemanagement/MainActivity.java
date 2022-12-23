@@ -1,25 +1,33 @@
 package com.beast.collegemanagement;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.display.DeviceProductInfo;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -30,8 +38,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.beast.collegemanagement.databinding.ActivityMainBinding;
+import com.beast.collegemanagement.tabfragment.NotificationFragment;
+import com.beast.collegemanagement.tabfragment.chatsFragment;
 import com.bumptech.glide.Glide;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +53,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -55,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomSheetDialog bottomSheetDialog;
 
+    private TabLayout tabLayout;
+
     String API_UPDATE_PROFILEPIC = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/updateprofilepic.php";
     String API_USERID = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/fetchuserid.php";
     String API_CHANGE_FULLNAME = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/changefullname.php";
@@ -65,30 +82,113 @@ public class MainActivity extends AppCompatActivity {
 
     String profileString = "";
 
+    int count;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
         progressDialog = new ProgressDialog(this);
         sp = getSharedPreferences("FILE_NAME", MODE_PRIVATE);
         editor = sp.edit();
 
+        setUpWithViewPager(binding.viewPager);
+        binding.tabLayout.setupWithViewPager(binding.viewPager);
+
         reFressData();
-        
-        binding.addStaff.setOnClickListener(new View.OnClickListener() {
+
+        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), AddStaffActivity.class));
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1){
+                    tabLayout.getTabAt(1).setText("Notification");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
-        binding.addtask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), SelectStaffActivity.class));
-            }
-        });
-        
+//        binding.addStaff.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), AddStaffActivity.class));
+//            }
+//        });
+//
+//        binding.addtask.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), SelectStaffActivity.class));
+//            }
+//        });
+
+                getNotification();
+
+    }
+
+    private void getNotification() {
+
+        count = 2;
+
+        tabLayout.getTabAt(1).setText("Notificaton" + "(" + String.valueOf(count) + ")");
+
+    }
+
+
+    private void setUpWithViewPager(ViewPager viewPager){
+
+        MainActivity.SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        adapter.addFragment(new chatsFragment(), "chats");
+        adapter.addFragment(new NotificationFragment(), "Notification");
+
+        viewPager.setAdapter(adapter);
+
+    }
+
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public SectionsPagerAdapter(FragmentManager manager){
+
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int positon){
+
+            return mFragmentList.get(positon);
+        }
+        @Override
+        public int getCount(){
+
+            return mFragmentList.size();
+
+        }
+        public void addFragment(Fragment fragment, String title){
+
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+
+        }
+        @Override
+        public CharSequence getPageTitle(int position){
+
+            return mFragmentTitleList.get(position);
+        }
     }
 
     private void reFressData() {
@@ -103,10 +203,38 @@ public class MainActivity extends AppCompatActivity {
 
         setToolBar();
 
+        binding.navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                switch (item.getItemId()){
+//
+                    case R.id.chat:
+                        break;
+                    case R.id.feed:
+                        startActivity(new Intent(MainActivity.this, StaffShowActivity.class));
+                        finish();
+                        break;
+                    case R.id.task:
+                        startActivity(new Intent(MainActivity.this, TasksActivity.class));
+                        finish();
+                        break;
+                    case R.id.menuu:
+                        showBottomSheet();
+                        break;
+
+
+                }
+
+                fragmentTransaction.commit();
+                return true;
+            }
+        });
+
+
     }
 
     private void setToolBar() {
-
         String[] splits = fullName.split(" ");
 
         if (userId != null){
@@ -116,12 +244,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "some error occured", Toast.LENGTH_SHORT).show();
         }
 
-        binding.toolBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBottomSheet();
-            }
-        });
+//        binding.toolBar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showBottomSheet();
+//            }
+//        });
 
     }
 
@@ -444,7 +572,7 @@ public class MainActivity extends AppCompatActivity {
                                 String profilePic2 = object.getString("profilepic");
 
                                 Toast.makeText(MainActivity.this, "profile updated", Toast.LENGTH_SHORT).show();
-                                Glide.with(getApplicationContext()).load(profilePic2).into(binding.toolBarProfilePic);
+//                                Glide.with(getApplicationContext()).load(profilePic2).into(binding.toolBarProfilePic);
 
                                 editor.putString("profilePic", profilePic2);
                                 profilePic = profilePic2;

@@ -1,26 +1,38 @@
 package com.beast.collegemanagement.adapters;
 
+import static com.beast.collegemanagement.Common.getBaseUrl;
+import static com.beast.collegemanagement.Common.getPosition;
+
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.beast.collegemanagement.R;
-import com.beast.collegemanagement.add_task;
 import com.beast.collegemanagement.models.StaffModel;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StaffAdapter extends RecyclerView.Adapter<StaffHolder> {
 
@@ -28,6 +40,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffHolder> {
     Activity activity;
     BottomSheetDialog bottomSheetDialog;
     String act;
+    String apiChangePosition = getBaseUrl() + "updateposition.php";
 
     public StaffAdapter(List<StaffModel> list, Activity activity, String act) {
         this.list = list;
@@ -49,28 +62,23 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffHolder> {
         holder.userName.setText(list.get(position).getUsername());
         holder.position.setText(list.get(position).getPosition());
 
-        if (act.equals("SelectStaff")){
-            holder.addBtn.setVisibility(View.INVISIBLE);
-        }
+        holder.addBtn.setVisibility(View.VISIBLE);
 
         holder.llStaffList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (act.equals("SelectStaff")){
-                    activity.startActivity(new Intent(activity, add_task.class)
-                            .putExtra("staffMemberName", list.get(position).getFullName()));
-                    activity.finish();
+                if (getPosition(activity).equalsIgnoreCase("principle")){
+                    showBottomSheet(position, holder, list.get(position).getUsername());
                 }
-                if (act.equals("AddStaff")){
-                    showBottomSheet();
-                }
+
             }
         });
 
     }
 
-    private void showBottomSheet() {
+
+    private void showBottomSheet(int position, StaffHolder holder, String userName) {
 
         bottomSheetDialog = new BottomSheetDialog(activity);
 
@@ -83,23 +91,73 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffHolder> {
             @Override
             public void onClick(View view) {
                 bottomSheetDialog.dismiss();
+                holder.position.setText("HOD");
+
+                updatePosition("HOD", userName, holder, position);
+
             }
         });view.findViewById(R.id.specotor).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 bottomSheetDialog.dismiss();
+                holder.position.setText("observer");
+                updatePosition("observer", userName, holder, position);
             }
         });view.findViewById(R.id.faculty).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 bottomSheetDialog.dismiss();
+                holder.position.setText("faculty");
+                updatePosition("faculty", userName, holder, position);
             }
         });view.findViewById(R.id.staff).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 bottomSheetDialog.dismiss();
+                holder.position.setText("staff");
+                updatePosition("staff", userName, holder, position);
             }
         });
+
+    }
+
+    private void updatePosition(String position, String userName, StaffHolder holder, int pos) {
+
+        StringRequest request = new StringRequest(Request.Method.POST, apiChangePosition,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if (response.equalsIgnoreCase("Position Updated") || response.contains("Position Updated")){
+
+                            Toast.makeText(activity, "position updated", Toast.LENGTH_SHORT).show();
+
+                        }else {
+                            Toast.makeText(activity, "something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "can't update position right now", Toast.LENGTH_SHORT).show();
+                holder.position.setText(list.get(pos).getPosition());
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("userName", userName);
+                params.put("position", position);
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(activity);
+        queue.add(request);
 
     }
 

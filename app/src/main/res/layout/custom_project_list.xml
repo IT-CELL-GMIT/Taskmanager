@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="3dp"
+    android:id="@+id/fullLayout"
+    android:layout_marginTop="3dp"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="45dp"
+        android:layout_height="45dp">
+
+        <ImageView
+            android:id="@+id/profileImg"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/project_icon">
+
+        </ImageView>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/tv_title"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:text="Title">
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="25dp"
+                android:layout_height="25dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/leaderProfileImg"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/color_primary_person">
+
+                </de.hdodenhof.circleimageview.CircleImageView>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/crown_icon">
+
+                </de.hdodenhof.circleimageview.CircleImageView>
+
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_leaderName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="username"
+                android:layout_marginLeft="5dp"
+                android:textSize="16dp"
+                android:textColor="@color/darkGrey">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/completeLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:textColor="@color/grey"
+                android:text="completed on ">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/tv_closeDate"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:textColor="@color/grey"
+                android:text="55-55_5555 55:55">
+            </TextView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="closed"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="right"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:textSize="16sp">
+
+            </TextView>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="55-55-5555"
+            android:textColor="@color/grey"
+            android:layout_gravity="right"
+            android:textSize="14dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="55:55"
+            android:textColor="@color/grey"
+            android:layout_gravity="right"
+            android:textSize="14dp">
+
+        </TextView>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

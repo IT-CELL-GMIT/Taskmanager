@@ -2,6 +2,7 @@ package com.beast.collegemanagement;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,7 +49,9 @@ public class AddStaffActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_staff);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_staff);
+
+        binding.ll.setBackgroundColor(getResources().getColor(R.color.icons));
 
         progressDialog = new ProgressDialog(this);
 
@@ -62,9 +65,9 @@ public class AddStaffActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         
 //        getUserData();
-        for (int i = 0; i<11; i++){
+
             getData();
-        }
+
     }
 
     private void getData() {
@@ -82,28 +85,17 @@ public class AddStaffActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         model = new StaffModel("20",
-                "Sanjay1",
-                "Sanjay Parmar",
+                "Tanishq_Kumar",
+                "Tanishq Kumar",
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQwEcb78mt0Dxay3RaI6yRBLY34JlKT1eQgUAFnvNXww&s",
                 "555555555555",
                 "laudabhencho@gmail.com",
                 "xxxxxxxxxxxxx",
-                "HOD");
+                "staff");
 
         list.add(model);
         adapter.notifyDataSetChanged();
 
-        model = new StaffModel("20",
-                "Sanjay1",
-                "Sanjay Parmar",
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQwEcb78mt0Dxay3RaI6yRBLY34JlKT1eQgUAFnvNXww&s",
-                "555555555555",
-                "laudabhencho@gmail.com",
-                "xxxxxxxxxxxxx",
-                "SPEC");
-
-        list.add(model);
-        adapter.notifyDataSetChanged();
 
     }
 

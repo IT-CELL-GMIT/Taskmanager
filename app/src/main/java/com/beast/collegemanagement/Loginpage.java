@@ -1,5 +1,7 @@
 package com.beast.collegemanagement;
 
+import static com.beast.collegemanagement.Common.getBaseUrl;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -36,8 +38,8 @@ public class Loginpage extends AppCompatActivity {
     private ActivityLoginpageBinding binding;
     String userName, password;
     ProgressDialog progressDialog;
-    String API_LOGIN = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/logincollegemanagement.php";
-    String API_FETCHDATA = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/fetchuserdata.php";
+    String API_LOGIN = getBaseUrl() +  "logincollegemanagement.php";
+    String API_FETCHDATA = getBaseUrl() +  "fetchuserdata.php";
     String singStatus = "", logStatus = "";
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -77,7 +79,7 @@ public class Loginpage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                userName = binding.userName.getText().toString().trim();
+                userName = binding.userName.getText().toString().trim().toLowerCase();
                 password = binding.password.getText().toString().trim();
                 
                 binding.userName.setText("");
