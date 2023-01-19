@@ -72,9 +72,9 @@ public class TasksActivity extends AppCompatActivity {
 
         TasksActivity.SectionsPagerAdapter adapter = new TasksActivity.SectionsPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new AddTaskFragment(), "tasks");
+        adapter.addFragment(new AddTaskFragment("TasksActivity"), "tasks");
         adapter.addFragment(new AddProjectFragment(), "project");
-        adapter.addFragment(new TaskEfficiencyFragment(), "efficiency");
+//        adapter.addFragment(new TaskEfficiencyFragment(), "efficiency");
 
         viewPager.setAdapter(adapter);
 

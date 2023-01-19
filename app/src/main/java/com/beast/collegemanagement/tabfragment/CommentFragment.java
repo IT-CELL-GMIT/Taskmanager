@@ -27,17 +27,31 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.beast.collegemanagement.Common;
 import com.beast.collegemanagement.R;
 import com.beast.collegemanagement.adapters.CommentAdapter;
 import com.beast.collegemanagement.databinding.FragmentCommentBinding;
 import com.beast.collegemanagement.models.CommentModel;
+import com.beast.collegemanagement.models.FilesModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +73,9 @@ public class CommentFragment extends Fragment {
 
     SharedPreferences sp;
     SharedPreferences.Editor editor;
+
+    String uploadCommentApi = Common.getBaseUrl() + "addComment.php";
+    String fetchCommentsApi = Common.getBaseUrl() + "fetchComments.php";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -139,6 +156,8 @@ public class CommentFragment extends Fragment {
            }
        });
 
+       getComments();
+
        return binding.getRoot();
     }
 
@@ -209,16 +228,104 @@ public class CommentFragment extends Fragment {
         String content = binding.edComment.getText().toString().trim();
         binding.edComment.setText("");
 
-        list.add(new CommentModel(getUserName(context),
-                getFullName(context),
-                getProfilePic(context),
-                getTimeDate(),
-                content,
-                "TEXT",
-                "",
-                "unknown"));
+        StringRequest request = new StringRequest(Request.Method.POST, uploadCommentApi, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.equalsIgnoreCase("failed") || response.contains("failed")){
+                    Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
+                }
+                getComments();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
 
-        adapter.notifyDataSetChanged();
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+
+                params.put("username", Common.getUserName(context));
+                params.put("fullname", Common.getFullName(context));
+                params.put("profilepic", Common.getProfilePic(context));
+                params.put("timedate", Common.getTimeDate());
+                params.put("content", content);
+                params.put("type", "TEXT");
+                params.put("task_id", Common.getSharedPrf("uniqueID", context));
+
+                return params;
+
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+
+    }
+
+    private void getComments() {
+
+        list.clear();
+
+
+        StringRequest request = new StringRequest(Request.Method.POST, fetchCommentsApi,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                            for (int i=0; i< jsonArray.length(); i++){
+
+                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                list.add(new CommentModel(object.getString("username"),
+                                        object.getString("fullname"),
+                                        object.getString("profilepic"),
+                                        object.getString("timedate"),
+                                        object.getString("content"),
+                                        object.getString("type"),
+                                        object.getString("link"),
+                                        object.getString("task_id")));
+
+                                adapter.notifyDataSetChanged();
+
+                            }
+
+                        } catch (JSONException e) {
+                            Toast.makeText(context, "format error", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+
+                params.put("task_id", Common.getSharedPrf("uniqueID", context));
+
+                return params;
+
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
 
     }
 }

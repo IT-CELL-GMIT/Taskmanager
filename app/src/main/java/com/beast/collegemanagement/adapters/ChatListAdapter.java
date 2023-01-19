@@ -1,5 +1,7 @@
 package com.beast.collegemanagement.adapters;
 
+import static com.beast.collegemanagement.tabfragment.AddTaskFragment.responsibleBSD;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,8 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.beast.collegemanagement.ChatsActivity;
+import com.beast.collegemanagement.Common;
 import com.beast.collegemanagement.R;
 import com.beast.collegemanagement.models.ChatListModel;
+import com.beast.collegemanagement.tabfragment.ProjectFragment;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
@@ -30,10 +34,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
 
     private List<ChatListModel> list;
     private Context context;
+    String activityName;
 
-    public ChatListAdapter(List<ChatListModel> list, Context context) {
+    public ChatListAdapter(List<ChatListModel> list, Context context, String activityName) {
         this.list = list;
         this.context = context;
+        this.activityName = activityName;
     }
 
     @NonNull
@@ -51,77 +57,106 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
 
         holder.tvName.setText(list.get(position).getFullName());
         holder.position.setText(list.get(position).getPosition());
-
-        int nomsg = Integer.parseInt(list.get(position).getNoOfMsgs());
-        if (nomsg > 9){
-            holder.noOfMsgsShown.setVisibility(View.VISIBLE);
-            holder.noOfMsgs.setText("9+");
-        }else if(nomsg == 0){
-            holder.noOfMsgsShown.setVisibility(View.GONE);
-        }else {
-            holder.noOfMsgs.setVisibility(View.VISIBLE);
-            holder.noOfMsgs.setText(String.valueOf(nomsg));
-        }
-
-        if (list.get(position).getChatType().equalsIgnoreCase("PERSON")){
-            holder.lastSeen.setVisibility(View.VISIBLE);
-            String chatDate = list.get(position).getLastOnline();
-            ///referrence 55-55-5555xxx55:55
-            String splits[] = chatDate.split("xxx");
-            if (splits[0].equalsIgnoreCase(currentDate)){
-                holder.lastSeen.setText("today at " + splits[1]);
-                holder.onlineIcon.setVisibility(View.GONE);
-            }else {
-
-                if (list.get(position).getLastOnline().equalsIgnoreCase("ONLINE")){
-                    holder.lastSeen.setText("online");
-                    holder.onlineIcon.setVisibility(View.VISIBLE);
-                }else {
-
-                    holder.onlineIcon.setVisibility(View.GONE);
-
-                    String splits2[] = splits[0].split("-");
-                    String splits3[] = currentDate.split("-");
-
-                    if (!splits2[1].trim().equalsIgnoreCase(splits3[1].trim())) {
-                        holder.lastSeen.setText("long ago");
-                    } else {
-
-                        int todayDt = Integer.parseInt(splits3[0]);
-                        int lastSeenDt = Integer.parseInt(splits2[0]);
-
-                        int diff = todayDt - lastSeenDt;
-
-                        if (diff < 10) {
-                            holder.lastSeen.setText(String.valueOf(diff) + " days ago");
-                        } else {
-                            holder.lastSeen.setText("long ago");
-                        }
-
-                    }
-                }
-
-            }
-        }else {
-            holder.lastSeen.setVisibility(View.GONE);
-        }
-
         Glide.with(context).load(list.get(position).getProfilePic()).into(holder.profile);
 
-        holder.ll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                context.startActivity(new Intent(context, ChatsActivity.class)
-                        .putExtra("userId", list.get(position).getUserId())
-                        .putExtra("userName", list.get(position).getUserName())
-                        .putExtra("fullName", list.get(position).getFullName())
-                        .putExtra("profilePic", list.get(position).getProfilePic())
-                        .putExtra("phoneNumber", list.get(position).getPhoneNumber())
-                        .putExtra("eMail", list.get(position).geteMail())
-                        .putExtra("lastOnline", list.get(position).getLastOnline())
-                        .putExtra("position", list.get(position).getPosition()));
+        if (activityName.equalsIgnoreCase("CHATSFRAGMENT")){
+            int nomsg = Integer.parseInt(list.get(position).getNoOfMsgs());
+            if (nomsg > 9){
+                holder.noOfMsgsShown.setVisibility(View.VISIBLE);
+                holder.noOfMsgs.setText("9+");
+            }else if(nomsg == 0){
+                holder.noOfMsgsShown.setVisibility(View.GONE);
+            }else {
+                holder.noOfMsgs.setVisibility(View.VISIBLE);
+                holder.noOfMsgs.setText(String.valueOf(nomsg));
             }
-        });
+
+            if (list.get(position).getChatType().equalsIgnoreCase("PERSON")){
+                holder.lastSeen.setVisibility(View.VISIBLE);
+                String chatDate = list.get(position).getLastOnline();
+                ///referrence 55-55-5555xxx55:55
+                String splits[] = chatDate.split("xxx");
+                if (splits[0].equalsIgnoreCase(currentDate)){
+                    holder.lastSeen.setText("today at " + splits[1]);
+                    holder.onlineIcon.setVisibility(View.GONE);
+                }else {
+
+                    if (list.get(position).getLastOnline().equalsIgnoreCase("ONLINE")){
+                        holder.lastSeen.setText("online");
+                        holder.onlineIcon.setVisibility(View.VISIBLE);
+                    }else {
+
+                        holder.onlineIcon.setVisibility(View.GONE);
+
+                        String splits2[] = splits[0].split("-");
+                        String splits3[] = currentDate.split("-");
+
+                        if (!splits2[1].trim().equalsIgnoreCase(splits3[1].trim())) {
+                            holder.lastSeen.setText("long ago");
+                        } else {
+
+                            int todayDt = Integer.parseInt(splits3[0]);
+                            int lastSeenDt = Integer.parseInt(splits2[0]);
+
+                            int diff = todayDt - lastSeenDt;
+
+                            if (diff < 10) {
+                                holder.lastSeen.setText(String.valueOf(diff) + " days ago");
+                            } else {
+                                holder.lastSeen.setText("long ago");
+                            }
+
+                        }
+                    }
+
+                }
+            }else {
+                holder.lastSeen.setVisibility(View.GONE);
+            }
+
+            holder.ll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, ChatsActivity.class)
+                            .putExtra("userId", list.get(position).getUserId())
+                            .putExtra("userName", list.get(position).getUserName())
+                            .putExtra("fullName", list.get(position).getFullName())
+                            .putExtra("profilePic", list.get(position).getProfilePic())
+                            .putExtra("phoneNumber", list.get(position).getPhoneNumber())
+                            .putExtra("eMail", list.get(position).geteMail())
+                            .putExtra("lastOnline", list.get(position).getLastOnline())
+                            .putExtra("position", list.get(position).getPosition()));
+                }
+            });
+        }
+        else if (activityName.equalsIgnoreCase("PROJECTFRAGMENT")){
+
+            holder.ll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ProjectFragment.respoNameTv.setText(list.get(position).getUserName());
+                    Glide.with(context).load(list.get(position).getProfilePic()).into(ProjectFragment.respoProfile);
+                    Common.commonList.clear();
+                    Common.addToCommonList(list.get(position).getUserName());
+                    ProjectFragment.bottomSheetDialog.dismiss();
+                }
+            });
+
+        }
+        else
+            if (activityName.equalsIgnoreCase("ADDTASKFRAGMENT")){
+
+                holder.ll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Common.setNameToSharedPref("RESPONSIBLEBSD", list.get(position).getUserName(), context);
+                        Common.setNameToSharedPref("RESPONSIBLEBSDPROFILE", list.get(position).getProfilePic(), context);
+                        Common.setNameToSharedPref("RESPONSIBLEBSDNAME", list.get(position).getFullName(), context);
+                        responsibleBSD.dismiss();
+                    }
+                });
+
+            }
 
     }
 

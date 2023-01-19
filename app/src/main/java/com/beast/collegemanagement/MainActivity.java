@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.beast.collegemanagement.databinding.ActivityMainBinding;
+import com.beast.collegemanagement.models.ChatListModel;
+import com.beast.collegemanagement.models.ObserverTaskModel;
 import com.beast.collegemanagement.tabfragment.NotificationFragment;
 import com.beast.collegemanagement.tabfragment.chatsFragment;
 import com.bumptech.glide.Glide;
@@ -84,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
     int count;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,10 +100,12 @@ public class MainActivity extends AppCompatActivity {
         sp = getSharedPreferences("FILE_NAME", MODE_PRIVATE);
         editor = sp.edit();
 
+        context = MainActivity.this;
+
         setUpWithViewPager(binding.viewPager);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
-        reFressData();
+        reFreshFromDataBase();
 
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -134,6 +141,20 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
                 getNotification();
+
+    }
+
+    private void reFreshFromDataBase() {
+
+        userId = sp.getString("userId", null);
+        userName = sp.getString("userName", null);
+        fullName = sp.getString("fullName", null);
+        eMail = sp.getString("eMail", null);
+        phoneNumber = sp.getString("phoneNumber", null);
+        password = sp.getString("password", null);
+        profilePic = sp.getString("profilePic", null);
+
+        updateUserDataOff(Common.getUserName(context));
 
     }
 

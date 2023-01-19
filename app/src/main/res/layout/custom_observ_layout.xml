@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/observerFullLL"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="5dp">
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profilePicImg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@color/colorPrimary"
+        android:layout_centerInParent="true">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/clickMark"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/check"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone">
+
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+</RelativeLayout>
+
+    <TextView
+        android:id="@+id/userNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textSize="20dp">
+
+    </TextView>
+
+</LinearLayout>

@@ -119,7 +119,7 @@ public class chatsFragment extends Fragment {
 
         list = new ArrayList<>();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ChatListAdapter(list, binding.getRoot().getContext());
+        adapter = new ChatListAdapter(list, binding.getRoot().getContext(), "CHATSFRAGMENT");
         binding.recyclerView.setAdapter(adapter);
 
         context = binding.getRoot().getContext();
@@ -211,7 +211,7 @@ public class chatsFragment extends Fragment {
         btsList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        btsAdapter = new ChatListAdapter(btsList, context);
+        btsAdapter = new ChatListAdapter(btsList, context, "CHATSFRAGMENT");
         recyclerView.setAdapter(btsAdapter);
 
         bottomSheetDialog.setDismissWithAnimation(true);

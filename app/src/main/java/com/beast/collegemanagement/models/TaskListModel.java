@@ -9,9 +9,11 @@ public class TaskListModel {
     time,
     date,
     status,
-    completeDate;
+    completeDate,
+    coLeaderName,
+    projectId;
 
-    public TaskListModel(String uniqueID, String title, String leaderName, String leaderProfileImg, String coLeaderProfileImg, String time, String date, String status, String completeDate) {
+    public TaskListModel(String uniqueID, String title, String leaderName, String leaderProfileImg, String coLeaderProfileImg, String time, String date, String status, String completeDate, String coLeaderName, String projectId) {
         this.uniqueID = uniqueID;
         this.title = title;
         this.leaderName = leaderName;
@@ -21,6 +23,24 @@ public class TaskListModel {
         this.date = date;
         this.status = status;
         this.completeDate = completeDate;
+        this.coLeaderName = coLeaderName;
+        this.projectId = projectId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getCoLeaderName() {
+        return coLeaderName;
+    }
+
+    public void setCoLeaderName(String coLeaderName) {
+        this.coLeaderName = coLeaderName;
     }
 
     public String getUniqueID() {

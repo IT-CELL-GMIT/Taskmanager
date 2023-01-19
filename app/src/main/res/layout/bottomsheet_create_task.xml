@@ -59,6 +59,7 @@
             android:background="@android:color/darker_gray"/>
 
         <LinearLayout
+            android:id="@+id/selectResponsibleLL"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:orientation="vertical"
@@ -149,6 +150,7 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
                 <ImageView
+                    android:id="@+id/showObserversImg"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/ic_baseline_keyboard_double_arrow_down_24"
@@ -167,6 +169,30 @@
             android:background="@android:color/darker_gray"/>
 
         <LinearLayout
+            android:id="@+id/obsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/observersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@android:color/darker_gray"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/deadLineLL"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:orientation="vertical"
@@ -222,9 +248,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/light">
+            android:background="@color/light"
+            android:gravity="center_vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/selectTaskFile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/attach"
@@ -234,20 +262,27 @@
 
             </de.hdodenhof.circleimageview.CircleImageView>
 
-            <TextView
-                android:id="@+id/createTask"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Create"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                android:layout_gravity="center_vertical"
-                android:gravity="end"
-                android:textSize="20dp"
-                android:padding="5dp"
-                android:layout_marginRight="10dp">
+                android:layout_height="wrap_content">
 
-            </TextView>
+                <TextView
+                    android:id="@+id/createTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Create"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="end"
+                    android:textSize="20dp"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentRight="true">
+
+                </TextView>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

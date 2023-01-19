@@ -1,11 +1,13 @@
 package com.beast.collegemanagement.tabfragment;
 
 import static android.app.Activity.RESULT_OK;
+import static com.beast.collegemanagement.Common.ConvertToString;
 import static com.beast.collegemanagement.Common.getFullName;
 import static com.beast.collegemanagement.Common.getProfilePic;
 import static com.beast.collegemanagement.Common.getTimeDate;
 import static com.beast.collegemanagement.Common.getUserName;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,6 +28,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.beast.collegemanagement.Common;
 import com.beast.collegemanagement.R;
 import com.beast.collegemanagement.adapters.FilesAdapter;
@@ -34,10 +44,16 @@ import com.beast.collegemanagement.models.CommentModel;
 import com.beast.collegemanagement.models.FilesModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +70,11 @@ public class FilesFragment extends Fragment {
     LinearLayoutManager layoutManager;
     List<FilesModel> list;
     FilesAdapter adapter;
+
+    String updloadFile = Common.getBaseUrl() + "addFileToTask.php";
+    String fetchFilesFromTaksApi = Common.getBaseUrl() + "fetchFilesTask.php";
+
+    ProgressDialog progressDialog;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -104,8 +125,12 @@ public class FilesFragment extends Fragment {
 
         context = binding.getRoot().getContext();
 
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setCancelable(false);
+
         recyclerView = binding.getRoot().findViewById(R.id.filesRecyclerView);
         layoutManager = new LinearLayoutManager(context);
+        layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
         list = new ArrayList<>();
         adapter = new FilesAdapter(list, context);
@@ -118,7 +143,73 @@ public class FilesFragment extends Fragment {
             }
         });
 
+        getFIles();
+
         return binding.getRoot();
+    }
+
+    private void getFIles() {
+
+        list.clear();
+        progressDialog.setMessage("Getting done...");
+
+        StringRequest request = new StringRequest(Request.Method.POST, fetchFilesFromTaksApi,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+
+                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                            for (int i=0; i< jsonArray.length(); i++){
+
+                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                list.add(new FilesModel(object.getString("username"),
+                                        object.getString("fullname"),
+                                        object.getString("profilepic"),
+                                        object.getString("timedate"),
+                                        object.getString("content"),
+                                        object.getString("type"),
+                                        object.getString("link"),
+                                        object.getString("task_id")));
+                                adapter.notifyDataSetChanged();
+
+                            }
+
+                        } catch (JSONException e) {
+                            Toast.makeText(context, "format error", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<>();
+
+                params.put("task_id", Common.getSharedPrf("uniqueID", context));
+
+                return params;
+
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+
     }
 
     private void showBottomsheet() {
@@ -167,27 +258,33 @@ public class FilesFragment extends Fragment {
 
             Uri imageUri = data.getData();
 
-            try {
-                Common.IMAGE_BITMAP = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String imageString = Common.ConvertToString(imageUri, context);
+            String ext = Common.getExtension(context, imageUri);
+            String fileType = "IMAGE";
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    list.add(new FilesModel(getUserName(context),
-                            getFullName(context),
-                            getProfilePic(context),
-                            getTimeDate(),
-                            "",
-                            "IMAGE",
-                            imageUri.toString(),
-                            "UNKNOWN"));
+            uploadFileTo(imageString, ext, fileType, "");
 
-                    adapter.notifyDataSetChanged();
-                }
-            }, 1000);
+//            try {
+//                Common.IMAGE_BITMAP = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    list.add(new FilesModel(getUserName(context),
+//                            getFullName(context),
+//                            getProfilePic(context),
+//                            getTimeDate(),
+//                            "",
+//                            "IMAGE",
+//                            imageUri.toString(),
+//                            "UNKNOWN"));
+//
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }, 1000);
 
         }
 
@@ -205,23 +302,59 @@ public class FilesFragment extends Fragment {
             String filename = mCursor.getString(indexedname);
             mCursor.close();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    list.add(new FilesModel(getUserName(context),
-                            getFullName(context),
-                            getProfilePic(context),
-                            getTimeDate(),
-                            filename,
-                            "PDF",
-                            "unknown",
-                            "UNKNOWN"));
+            String pdfString = ConvertToString(imageUri, context);
+            String ext = Common.getExtension(context, imageUri);
+            String fileType = "PDF";
 
-                    adapter.notifyDataSetChanged();
-                }
-            }, 1000);
+            uploadFileTo(pdfString, ext, fileType, filename);
 
         }
+
+    }
+
+    private void uploadFileTo(String imageString, String ext, String fileType, String s) {
+
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+
+
+        StringRequest request = new StringRequest(Request.Method.POST, updloadFile,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        getFIles();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("username", Common.getUserName(context));
+                params.put("fullname", Common.getFullName(context));
+                params.put("profilepic", Common.getProfilePic(context));
+                params.put("timedate", Common.getTimeDate());
+                params.put("content", s);
+                params.put("type", fileType);
+                params.put("task_file", imageString);
+                params.put("task_id", Common.getSharedPrf("uniqueID", context));
+                params.put("file_ext", ext);
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
 
     }
 

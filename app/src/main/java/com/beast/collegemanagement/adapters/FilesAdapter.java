@@ -73,8 +73,9 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.FilesHolder>
             holder.pdfCard.setVisibility(View.GONE);
             holder.imageCard.setVisibility(View.VISIBLE);
 
-            holder.contentImg.setImageBitmap(Common.IMAGE_BITMAP);
+//            holder.contentImg.setImageBitmap(Common.IMAGE_BITMAP);
 
+            Glide.with(context).load(list.get(position).getLink()).into(holder.contentImg);
             holder.fullNameImg.setText(fullName);
 
             if (commentDate.equalsIgnoreCase(todayDate)){

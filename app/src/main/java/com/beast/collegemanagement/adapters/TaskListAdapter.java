@@ -34,6 +34,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskHo
     String uniqueID, title,
             leaderName,
             leaderProfileImg,
+            coLeaderName,
             coLeaderProfileImg,
             time,
             date,
@@ -63,6 +64,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskHo
         title = list.get(position).getTitle();
         leaderName = list.get(position).getLeaderName();
         leaderProfileImg = list.get(position).getLeaderProfileImg();
+        coLeaderName = list.get(position).getCoLeaderName();
         coLeaderProfileImg = list.get(position).getCoLeaderProfileImg();
         time = list.get(position).getTime();
         status = list.get(position).getStatus();
@@ -80,8 +82,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskHo
         holder.leaderName.setText(leaderName);
         holder.title.setText(title);
         Glide.with(context).load(leaderProfileImg).into(holder.leaderProfile);
-//        Glide.with(context).load(coLeaderProfileImg).into(holder.coProfile);
-
+        Glide.with(context).load(coLeaderProfileImg).into(holder.coProfile);
 
 
         if (status.equalsIgnoreCase("COMPLETED")){
@@ -234,22 +235,23 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskHo
             @Override
             public void onClick(View view) {
 
-                editor.putString("uniqueID", uniqueID);
-                editor.putString("title", title);
-                editor.putString("leaderName", leaderName);
-                editor.putString("leaderProfileImg", leaderProfileImg);
-                editor.putString("coLeaderProfileImg", coLeaderProfileImg);
-                editor.putString("time", time);
-                editor.putString("date", date);
-                editor.putString("status", status);
-                editor.putString("completeDate", completeDate);
+                editor.putString("uniqueID", list.get(position).getUniqueID());
+                editor.putString("title", list.get(position).getTitle());
+                editor.putString("leaderName", list.get(position).getLeaderName());
+                editor.putString("leaderProfileImg", list.get(position).getLeaderProfileImg());
+                editor.putString("coLeaderName", list.get(position).getCoLeaderName());
+                editor.putString("coLeaderProfileImg", list.get(position).getCoLeaderProfileImg());
+                editor.putString("time", list.get(position).getTime());
+                editor.putString("date", list.get(position).getDate());
+                editor.putString("status", list.get(position).getStatus());
+                editor.putString("completeDate", list.get(position).getCompleteDate());
                 editor.putString("timeLeft", holder.timeLeft.getText().toString());
 
                 editor.apply();
 
                 context.startActivity(new Intent(context, ProjectActivity.class)
-                        .putExtra("uniqueID", uniqueID)
-                        .putExtra("title", title)
+                        .putExtra("uniqueID", list.get(position).getUniqueID())
+                        .putExtra("title", list.get(position).getTitle())
                 );
 
             }
