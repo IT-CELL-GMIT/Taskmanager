@@ -40,7 +40,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     ProgressDialog progressDialog;
 
-    String acceptFriendRequest = Common.getBaseUrl() + "friendRequestAccept.php";
+    String acceptFriendRequest = Common.getBaseUrl() + "acceptFriendRequest.php";
+    String friendRequestAccept = Common.getBaseUrl() + "friendRequestAccept.php";
+    String declineFriendRequest = Common.getBaseUrl() + "declineFriendRequest.php";
+    String disableNotification = Common.getBaseUrl() + "disableFriendrequest.php";
 
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -68,83 +71,152 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         progressDialog = new ProgressDialog(context);
 
+        if (!list.get(position).getIsDisabled().equalsIgnoreCase("yes")) {
 
-        holder.username.setText(sp.getString("fullName", "Not Identified"));
-        holder.senderUsername.setText(list.get(position).getFromUsername());
-        holder.content.setText(list.get(position).getContent());
+            holder.username.setText(sp.getString("fullName", "Not Identified"));
+            holder.senderUsername.setText(list.get(position).getFromUsername());
+            holder.content.setText(list.get(position).getContent());
 
-        String timeDateSplits [] = list.get(position).getTimeDate().split("xxx");
+            String timeDateSplits[] = list.get(position).getTimeDate().split("xxx");
 
-        holder.timeDate.setText(timeDateSplits[0] + " " + timeDateSplits[1]);
+            holder.timeDate.setText(timeDateSplits[0] + " " + timeDateSplits[1]);
 
-        if (list.get(position).getType().equalsIgnoreCase("FRIEND_REQUEST")){
+            if (list.get(position).getType().equalsIgnoreCase("FRIEND_REQUEST")) {
 
-            holder.acceptDeclineLL.setVisibility(View.VISIBLE);
+                holder.acceptDeclineLL.setVisibility(View.VISIBLE);
 
-            holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
+                holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        freindRequestAccepted(Common.getUserName(context), list.get(position).getFromUsername(), holder);
+
+                    }
+                });
+
+                holder.declineBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        new AlertDialog.Builder(context)
+                                .setTitle("Friend Request")
+                                .setMessage("Do you really want to decline freind request?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        holder.acceptDeclineLL.setVisibility(View.GONE);
+                                        holder.freindDeclineText.setVisibility(View.VISIBLE);
+                                        declineFriendRequest(list.get(position).getFromUsername());
+                                    }
+                                }).setNegativeButton("cancle", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.cancel();
+                                    }
+                                }).show();
+
+                    }
+                });
+
+            } else if (list.get(position).getType().equalsIgnoreCase("FRIEND_REQUEST_ACCEPTED")) {
+
+                holder.freindAcceptText.setVisibility(View.VISIBLE);
+                holder.acceptDeclineLL.setVisibility(View.GONE);
+
+            } else if (list.get(position).getType().equalsIgnoreCase("FRIEND_REQUEST_DECLINED")) {
+
+                holder.acceptDeclineLL.setVisibility(View.GONE);
+                holder.freindDeclineText.setVisibility(View.VISIBLE);
+
+            } else {
+                holder.acceptDeclineLL.setVisibility(View.GONE);
+                holder.freindAcceptText.setVisibility(View.GONE);
+                holder.freindDeclineText.setVisibility(View.GONE);
+            }
+
+            holder.removeNotification.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    freindRequestAccepted(Common.getUserName(context), list.get(position).getFromUsername(), holder);
+                    list.remove(position);
+                    NotificationFragment.getNewNotification(list);
+
+                    disableNotification(list.get(position).getFromUsername(), list.get(position).getTimeDate(), list.get(position).getType());
 
                 }
             });
 
-            holder.declineBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    new AlertDialog.Builder(context)
-                            .setTitle("Friend Request")
-                            .setMessage("Do you really want to decline freind request?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    holder.acceptDeclineLL.setVisibility(View.GONE);
-                                    holder.freindDeclineText.setVisibility(View.VISIBLE);
-                                    declineFriendRequest();
-                                }
-                            }).setNegativeButton("cancle", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.cancel();
-                                }
-                            }).show();
-
-                }
-            });
-
-        }else if (list.get(position).getType().equalsIgnoreCase("FRIEND_REQUEST_ACCEPTED")){
-
-            holder.freindAcceptText.setVisibility(View.VISIBLE);
-            holder.acceptDeclineLL.setVisibility(View.GONE);
-
-        }else if(list.get(position).getType().equalsIgnoreCase("FRIEND_REQUEST_DECLINED")){
-
-            holder.acceptDeclineLL.setVisibility(View.GONE);
-            holder.freindDeclineText.setVisibility(View.VISIBLE);
-
-        }
-        else {
-            holder.acceptDeclineLL.setVisibility(View.GONE);
-            holder.freindAcceptText.setVisibility(View.GONE);
-            holder.freindDeclineText.setVisibility(View.GONE);
         }
 
-        holder.removeNotification.setOnClickListener(new View.OnClickListener() {
+    }
+
+    private void disableNotification(String fromUsername, String timeDate, String type) {
+
+        StringRequest request = new StringRequest(Request.Method.POST, disableNotification,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(context, fromUsername, Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
             @Override
-            public void onClick(View view) {
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
 
-                list.remove(position);
-                NotificationFragment.getNewNotification(list);
+                params.put("reciever", Common.getUserName(context));
+                params.put("sender", fromUsername);
+                params.put("timedate", timeDate);
+                params.put("type", type);
+
+                return params;
 
             }
-        });
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
 
     }
 
-    private void declineFriendRequest() {
+    private void declineFriendRequest(String fromUsername) {
+
+        StringRequest request = new StringRequest(Request.Method.POST, declineFriendRequest,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equalsIgnoreCase("failed") || response.contains("failed")){
+                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("reciever", Common.getUserName(context));
+                params.put("sender", fromUsername);
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+
     }
+
 
     private void freindRequestAccepted(String userName, String friednID, NotificationHolder holder) {
 
@@ -153,7 +225,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         progressDialog.setCancelable(true);
         progressDialog.setCanceledOnTouchOutside(true);
 
-        StringRequest request = new StringRequest(Request.Method.POST, acceptFriendRequest,
+        StringRequest request = new StringRequest(Request.Method.POST, friendRequestAccept,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -166,7 +238,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             holder.freindAcceptText.setVisibility(View.VISIBLE);
                             holder.acceptDeclineLL.setVisibility(View.GONE);
 
-                            setFriendRequestNotification();
+                            setFriendRequestNotification(userName, friednID);
 
                         }else {
                             Toast.makeText(context, "error while accepting friend request", Toast.LENGTH_SHORT).show();
@@ -197,11 +269,39 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     }
 
-    private void setFriendRequestNotification() {
+    private void setFriendRequestNotification(String userName, String friednID) {
 
+        StringRequest request = new StringRequest(Request.Method.POST, acceptFriendRequest,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equalsIgnoreCase("failed") || response.contains("failed")){
+                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
 
+                params.put("reciever", Common.getUserName(context));
+                params.put("sender", friednID);
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
 
     }
+
 
     @Override
     public int getItemCount() {
