@@ -172,11 +172,11 @@
                             android:id="@+id/contentPdf"
                             android:layout_width="150dp"
                             android:layout_height="150dp"
-                            android:src="@drawable/ic_baseline_picture_as_pdf_24"
                             android:layout_centerInParent="true"
-                            android:scaleType="centerCrop"
                             android:maxHeight="350dp"
-                            android:minHeight="250dp">
+                            android:minHeight="250dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_baseline_picture_as_pdf_24">
 
                         </ImageView>
 

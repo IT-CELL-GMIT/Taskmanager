@@ -18,18 +18,6 @@
 
         </de.hdodenhof.circleimageview.CircleImageView>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/statusOnline"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:background="@drawable/mainbg_green"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="2dp">
-
-        </de.hdodenhof.circleimageview.CircleImageView>
-
     </RelativeLayout>
 
     <LinearLayout
@@ -78,44 +66,22 @@
         android:gravity="center_vertical|right"
         android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/numberOfMSGShown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="1dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/chatNumBackground"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/mainbg"
-            android:visibility="visible"
-            android:backgroundTint="@color/colorPrimary">
-
-        </de.hdodenhof.circleimageview.CircleImageView>
-
-        <TextView
-            android:id="@+id/tv_date"
+        <RelativeLayout
+            android:id="@+id/numberOfMSGShown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="99+"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="20sp"
-            android:visibility="visible">
+            android:layout_marginRight="1dp">
 
-        </TextView>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/selectCheck"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:src="@drawable/check">
 
-    </RelativeLayout>
+            </de.hdodenhof.circleimageview.CircleImageView>
 
-        <TextView
-            android:id="@+id/lastSeen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="lastOnline"
-            android:textColor="@color/primaryTextColor">
-
-        </TextView>
+        </RelativeLayout>
 
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.beast.collegemanagement;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -207,6 +208,21 @@ public class Common {
         }else {
             return extension;
         }
+    }
+
+    public static ProgressDialog progressDialog;
+
+    public static void showProgressDialog(Context context, String msg){
+
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage(msg);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+    }
+
+    public static void dismissProgressDialog(){
+        progressDialog.dismiss();
     }
 
 }

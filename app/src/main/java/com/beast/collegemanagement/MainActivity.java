@@ -41,7 +41,9 @@ import com.android.volley.toolbox.Volley;
 import com.beast.collegemanagement.databinding.ActivityMainBinding;
 import com.beast.collegemanagement.models.ChatListModel;
 import com.beast.collegemanagement.models.ObserverTaskModel;
+import com.beast.collegemanagement.tabfragment.GroupChatFragment;
 import com.beast.collegemanagement.tabfragment.NotificationFragment;
+import com.beast.collegemanagement.tabfragment.TaskChatFragment;
 import com.beast.collegemanagement.tabfragment.chatsFragment;
 import com.bumptech.glide.Glide;
 import com.google.android.material.badge.BadgeDrawable;
@@ -115,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 1){
-                    tabLayout.getTabAt(1).setText("Notification");
+                if (position == 3){
+                    tabLayout.getTabAt(3).setText("Notification");
                 }
             }
 
@@ -162,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 
         count = 2;
 
-        tabLayout.getTabAt(1).setText("Notificaton" + "(" + String.valueOf(count) + ")");
+        tabLayout.getTabAt(3).setText("Notificaton" + "(" + String.valueOf(count) + ")");
 
     }
 
@@ -172,6 +174,8 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new chatsFragment(), "chats");
+        adapter.addFragment(new GroupChatFragment(), "group");
+        adapter.addFragment(new TaskChatFragment(), "task chat");
         adapter.addFragment(new NotificationFragment(), "Notification");
 
         viewPager.setAdapter(adapter);

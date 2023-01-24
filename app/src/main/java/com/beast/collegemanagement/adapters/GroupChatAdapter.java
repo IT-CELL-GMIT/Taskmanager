@@ -1,6 +1,5 @@
 package com.beast.collegemanagement.adapters;
 
-import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -29,45 +28,40 @@ import com.beast.collegemanagement.models.ChatsModel;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.net.URI;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> {
+public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.ChatHolder> {
 
     List<ChatsModel> list;
     Context context;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     String userName;
+    String activityName;
 
-    public ChatsAdapter(List<ChatsModel> list, Context context) {
+    public GroupChatAdapter(List<ChatsModel> list, Context context, String activityName) {
         this.list = list;
         this.context = context;
-    }
-
-    public void setList(List<ChatsModel> list){
-
-        this.list = list;
-        notifyDataSetChanged();
-
+        this.activityName = activityName;
     }
 
     @NonNull
     @Override
-    public ChatsAdapter.ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GroupChatAdapter.ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType==0){
-            View view = LayoutInflater.from(context).inflate(R.layout.chat_item_left, parent, false);
-            return new ChatHolder(view);
+            View view = LayoutInflater.from(context).inflate(R.layout.custom_groupchat_left, parent, false);
+            return new GroupChatAdapter.ChatHolder(view);
         }else {
-            View view = LayoutInflater.from(context).inflate(R.layout.chat_itm_right, parent, false);
-            return new ChatHolder(view);
+            View view = LayoutInflater.from(context).inflate(R.layout.custom_groupchat_right, parent, false);
+            return new GroupChatAdapter.ChatHolder(view);
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatsAdapter.ChatHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull GroupChatAdapter.ChatHolder holder, int position) {
+
 
         sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
         editor = sp.edit();
@@ -76,7 +70,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> 
 
         if (list.get(position).getType().equals("IMAGE")){
 
-            holder.textMsg.setVisibility(View.GONE);
+            holder.imgFullName.setText(list.get(position).getSender());
+
+            holder.txtLL.setVisibility(View.GONE);
             holder.imageView.setVisibility(View.VISIBLE);
             holder.documentBtn.setVisibility(View.GONE);
 //            String path = Environment.getExternalStoragePublicDirectory(Environment.getExternalStorageState()).getAbsolutePath();
@@ -92,6 +88,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> 
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 holder.image.setImageBitmap(bitmap);
             }else {
+
                 holder.image.setVisibility(View.GONE);
                 holder.blurImage.setVisibility(View.VISIBLE);
                 holder.downloadBtn.setVisibility(View.VISIBLE);
@@ -118,16 +115,19 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> 
 
         else if (list.get(position).getType().equals("TEXT")){
 
-            holder.textMsg.setVisibility(View.VISIBLE);
+            holder.txtLL.setVisibility(View.VISIBLE);
             holder.imageView.setVisibility(View.GONE);
             holder.documentBtn.setVisibility(View.GONE);
             holder.textMsg.setText(list.get(position).getTextMsg());
+            holder.tvFullName.setText(list.get(position).getSender());
 
         }
 
         else if (list.get(position).getType().equalsIgnoreCase("PDF")){
+
+            holder.pdfFUllName.setText(list.get(position).getSender());
             holder.imageView.setVisibility(View.GONE);
-            holder.textMsg.setVisibility(View.GONE);
+            holder.txtLL.setVisibility(View.GONE);
             holder.documentBtn.setVisibility(View.VISIBLE);
 
             holder.pdfName.setText(list.get(position).getTextMsg());
@@ -170,27 +170,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> 
 
         }
 
-
     }
-
-    private void checkDownload(File file, ChatHolder holder, int position) {
-
-        if (!file.exists()){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    checkDownload(file, holder, position);
-                }
-            }, 300);
-        }else {
-
-            Common.dismissProgressDialog();
-            holder.pdfDownloadBtn.setVisibility(View.GONE);
-
-        }
-
-    }
-
 
     @Override
     public int getItemCount() {
@@ -202,10 +182,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> 
         TextView textMsg, downloadSize, pdfName;
         CardView imageView;
         ImageView image;
-        LinearLayout downloadBtn;
+        LinearLayout downloadBtn, txtLL;
         ImageView blurImage;
         CardView documentBtn;
         CircleImageView pdfDownloadBtn;
+        TextView tvFullName, imgFullName, pdfFUllName;
 
         public ChatHolder(@NonNull View itemView) {
             super(itemView);
@@ -219,6 +200,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> 
             documentBtn = itemView.findViewById(R.id.card_pdf);
             pdfDownloadBtn = itemView.findViewById(R.id.downloadBtn);
             pdfName = itemView.findViewById(R.id.pdfName);
+            tvFullName = itemView.findViewById(R.id.fullNameTV);
+            imgFullName = itemView.findViewById(R.id.fullNameImg);
+            pdfFUllName = itemView.findViewById(R.id.fullNamePdf);
+            txtLL = itemView.findViewById(R.id.txtLL);
 
         }
     }
@@ -233,6 +218,24 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatHolder> 
             return 1;
         }else {
             return 0;
+        }
+
+    }
+
+    private void checkDownload(File file, GroupChatAdapter.ChatHolder holder, int position) {
+
+        if (!file.exists()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    checkDownload(file, holder, position);
+                }
+            }, 300);
+        }else {
+
+            Common.dismissProgressDialog();
+            holder.pdfDownloadBtn.setVisibility(View.GONE);
+
         }
 
     }

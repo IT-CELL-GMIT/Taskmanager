@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.beast.collegemanagement.AddGroupChatActivity;
 import com.beast.collegemanagement.AddStaffActivity;
 import com.beast.collegemanagement.Common;
 import com.beast.collegemanagement.R;
@@ -217,6 +218,19 @@ public class chatsFragment extends Fragment {
         bottomSheetDialog.setDismissWithAnimation(true);
 
         getFriendsBTS();
+
+
+        LinearLayout addGroupChatBtn = bottomSheetDialog.findViewById(R.id.addGroupChatLL);
+
+        addGroupChatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+                startActivity(new Intent(context, AddGroupChatActivity.class));
+            }
+        });
+
+
     }
 
     private void getFriends() {
@@ -365,7 +379,6 @@ public class chatsFragment extends Fragment {
                                     JSONObject object = jsonArray.getJSONObject(i);
 
                                     getUserInfoBTN(object.getString("friendname"));
-                                    Toast.makeText(context, object.getString("friendname"), Toast.LENGTH_SHORT).show();
 
                                 }
 
