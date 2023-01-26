@@ -76,6 +76,7 @@ public class CommentFragment extends Fragment {
 
     String uploadCommentApi = Common.getBaseUrl() + "addComment.php";
     String fetchCommentsApi = Common.getBaseUrl() + "fetchComments.php";
+    String addTaskHistoryApi = Common.getBaseUrl() + "AddTaskHistory.php";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -160,6 +161,44 @@ public class CommentFragment extends Fragment {
 
        return binding.getRoot();
     }
+
+    private void addTaskHistory(String taskId, String actionText){
+
+        StringRequest request = new StringRequest(Request.Method.POST, addTaskHistoryApi,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if (response.equalsIgnoreCase("Failed") || response.contains("Failed")){
+                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("task_id", taskId);
+                params.put("action_text", actionText);
+                params.put("time_date", Common.getTimeDate());
+                params.put("username", Common.getUserName(context));
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+
+    }
+
 
     private void showBottomSheet() {
 

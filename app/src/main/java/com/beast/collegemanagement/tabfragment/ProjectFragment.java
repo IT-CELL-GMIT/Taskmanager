@@ -125,6 +125,7 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
     String updloadFile = Common.getBaseUrl() + "addFileToTask.php";
     String insertSubtaskApi = Common.getBaseUrl() + "InsertSubtask.php";
     String fetchSubtasksApi = Common.getBaseUrl() + "fetchSubtasks.php";
+    String addTaskHistoryApi = Common.getBaseUrl() + "AddTaskHistory.php";
 
 
     public static TextView respoNameTv;
@@ -315,6 +316,8 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                 saveStatus();
                 saveDeadline();
 
+                addTaskHistory(uniqueID, "Changed settings of " + title);
+
             }
         });
 
@@ -444,6 +447,45 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
         return binding.getRoot();
     }
 
+
+    private void addTaskHistory(String taskId, String actionText){
+
+        StringRequest request = new StringRequest(Request.Method.POST, addTaskHistoryApi,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if (response.equalsIgnoreCase("Failed") || response.contains("Failed")){
+                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("task_id", taskId);
+                params.put("action_text", actionText);
+                params.put("time_date", Common.getTimeDate());
+                params.put("username", Common.getUserName(context));
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+
+    }
+
+
     private void showGetSubtaskBottomSheet() {
 
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
@@ -494,6 +536,9 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                             Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
                         }
                         getSubTasks();
+
+                        addTaskHistory(uniqueID, "Changed sub tasks in " + title);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -700,6 +745,7 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        addTaskHistory(Common.getSharedPrf("uniqueID", context), "Uploaded a file in" + title);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -912,6 +958,7 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                             Toast.makeText(context, "Project updated", Toast.LENGTH_SHORT).show();
                         }
                         getTaskProject();
+                        addTaskHistory(uniqueID, "Changed project settings in " + title);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -1027,6 +1074,7 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                                 Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
                                 
                             }
+                            addTaskHistory(uniqueID, "Changed dead line to " + selectedDateTime + " in " + uniqueID);
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -1065,6 +1113,7 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                             Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
 
                         }
+
 
                     }
                 }, new Response.ErrorListener() {
@@ -1290,6 +1339,8 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
 
                         }
 
+                        addTaskHistory(uniqueID, "Changed participants of " + title);
+
                         getParticipants();
 
                     }
@@ -1469,6 +1520,9 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                             Toast.makeText(context, "failed to execute", Toast.LENGTH_SHORT).show();
 
                         }
+
+                        addTaskHistory(uniqueID, "Changed observers of " + title);
+
                         showTaskObservers();
 
                     }
@@ -1763,6 +1817,7 @@ public class ProjectFragment extends Fragment implements DatePickerDialog.OnDate
                         if (response.contains("Position Updated") || response.equalsIgnoreCase("Position Updated")){
 
                             Toast.makeText(context, "responsible updated", Toast.LENGTH_SHORT).show();
+                            addTaskHistory(uniqueID, "Changed responsibles of " + title);
                             
                         }else {
                             Toast.makeText(context, "failed to update responsible", Toast.LENGTH_SHORT).show();

@@ -134,36 +134,6 @@ public class StaffShowActivity extends AppCompatActivity {
 
         setToolBar();
 
-        binding.navigation.setSelectedItemId(R.id.feed);
-        binding.navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                switch (item.getItemId()){
-//
-                    case R.id.chat:
-                        startActivity(new Intent(StaffShowActivity.this, MainActivity.class));
-                        finish();
-                        break;
-                    case R.id.feed:
-                        break;
-                    case R.id.task:
-                        startActivity(new Intent(StaffShowActivity.this, TasksActivity.class));
-                        finish();
-                        break;
-                    case R.id.menuu:
-                        Toast.makeText(StaffShowActivity.this, "menuu", Toast.LENGTH_SHORT).show();
-                        break;
-
-
-                }
-
-                fragmentTransaction.commit();
-                return true;
-            }
-        });
-
-
     }
 
 

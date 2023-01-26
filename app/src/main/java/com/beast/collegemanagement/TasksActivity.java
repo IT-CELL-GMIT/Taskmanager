@@ -19,6 +19,7 @@ import com.beast.collegemanagement.databinding.ActivityTasksBinding;
 import com.beast.collegemanagement.tabfragment.AddProjectFragment;
 import com.beast.collegemanagement.tabfragment.AddTaskFragment;
 import com.beast.collegemanagement.tabfragment.EfficiencyFragment;
+import com.beast.collegemanagement.tabfragment.HistoryFragment;
 import com.beast.collegemanagement.tabfragment.NotificationFragment;
 import com.beast.collegemanagement.tabfragment.TaskEfficiencyFragment;
 import com.beast.collegemanagement.tabfragment.chatsFragment;
@@ -74,6 +75,7 @@ public class TasksActivity extends AppCompatActivity {
 
         adapter.addFragment(new AddTaskFragment("TasksActivity"), "tasks");
         adapter.addFragment(new AddProjectFragment(), "project");
+        adapter.addFragment(new HistoryFragment(), "history");
 //        adapter.addFragment(new TaskEfficiencyFragment(), "efficiency");
 
         viewPager.setAdapter(adapter);
@@ -139,12 +141,14 @@ public class TasksActivity extends AppCompatActivity {
                         finish();
                         break;
                     case R.id.feed:
-                        startActivity(new Intent(TasksActivity.this, StaffShowActivity.class));
+                        startActivity(new Intent(TasksActivity.this, FeedsActivity.class));
                         finish();
                         break;
                     case R.id.task:
                         break;
                     case R.id.menuu:
+                        startActivity(new Intent(TasksActivity.this, SettingsActivity.class));
+                        finish();
                         break;
 
 

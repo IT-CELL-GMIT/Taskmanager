@@ -5,10 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/icons"
-        tools:context=".StaffShowActivity">
+        tools:context=".FeedsActivity">
 
         <LinearLayout
             android:id="@+id/appBarLayout"
@@ -66,12 +67,22 @@
             android:id="@+id/viewPager"
             android:visibility="visible"
             android:layout_below="@+id/tabLayout"
+            android:layout_above="@id/navigation"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/icons">
 
         </androidx.viewpager.widget.ViewPager>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/icons"
+
+            app:menu="@menu/btn_nav" />
 
     </RelativeLayout>
 </layout>

@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.chat:
                         break;
                     case R.id.feed:
-                        startActivity(new Intent(MainActivity.this, StaffShowActivity.class));
+                        startActivity(new Intent(MainActivity.this, FeedsActivity.class));
                         finish();
                         break;
                     case R.id.task:
@@ -245,7 +245,8 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                         break;
                     case R.id.menuu:
-                        showBottomSheet();
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        finish();
                         break;
 
 
