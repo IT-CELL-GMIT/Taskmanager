@@ -66,8 +66,6 @@ public class ChatsActivity extends AppCompatActivity {
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
-    Toast toast;
-
     String sendMsgOn = Common.getBaseUrl() + "insertchat.php";
     String apiGetChat = Common.getBaseUrl() + "getChat.php";
     String imageChatApi = Common.getBaseUrl() + "insertImageChat.php";
@@ -184,7 +182,7 @@ public class ChatsActivity extends AppCompatActivity {
             public void run() {
                 while (true) {
                     try {
-                        sleep(1500);
+                        sleep(500);
                         getChat();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
