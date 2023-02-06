@@ -1,5 +1,7 @@
 package com.beast.collegemanagement;
 
+import static com.beast.collegemanagement.Common.getBaseUrl;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -12,6 +14,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
@@ -91,6 +97,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Context context;
 
+    Intent mServiceIntent;
+    private YourService mYourService;
+
+    String notificaion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,10 +115,54 @@ public class MainActivity extends AppCompatActivity {
 
         context = MainActivity.this;
 
+        Common.friendList.clear();
+        Common.chatList.clear();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Common.userStatus = Common.onlineStatus;
+                Log.i("tag", "user online");
+            }
+        }, 2000);
+
+        Intent intent = getIntent();
+
+
+        if (intent.getStringExtra(Common.notification) != null){
+
+            notificaion = intent.getStringExtra(Common.notification);
+
+            if (notificaion.contains(Common.friendNotification)){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        TabLayout.Tab tab = tabLayout.getTabAt(3);
+                        tab.select();
+                    }
+                }, 2000);
+            }else if (notificaion.contains(Common.chatNotification)){
+                String[] splits = notificaion.split("xxx");
+                fetchUserData(splits[1]);
+            }
+
+        }
+
         setUpWithViewPager(binding.viewPager);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
         reFreshFromDataBase();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    notificationManager.deleteNotificationChannel("Background_Service");
+                }
+            }
+        }, 2000);
 
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -144,6 +199,110 @@ public class MainActivity extends AppCompatActivity {
 
                 getNotification();
 
+
+        mYourService = new YourService();
+        mServiceIntent = new Intent(this, mYourService.getClass());
+        if (!isMyServiceRunning(mYourService.getClass())) {
+            startService(mServiceIntent);
+        }
+
+
+    }
+
+    private void fetchUserData(String userName) {
+
+        StringRequest request = new StringRequest(Request.Method.POST, API_FETCHDATA,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            String success = jsonObject.getString("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                            if (success.equals("1")){
+                                String userId, username, fullName, profilePic, phoneNumber, eMail, password, position;
+
+                                JSONObject object = jsonArray.getJSONObject(0);
+
+                                userId = object.getString("id");
+                                username = object.getString("username");
+                                fullName = object.getString("fullname");
+                                profilePic = object.getString("profilepic");
+                                phoneNumber = object.getString("phonenumber");
+                                eMail = object.getString("email");
+                                position = object.getString("position");
+
+                                startActivity(new Intent(context, ChatsActivity.class)
+                                        .putExtra("userId", userId)
+                                        .putExtra("userName", username)
+                                        .putExtra("fullName", fullName)
+                                        .putExtra("profilePic", profilePic)
+                                        .putExtra("phoneNumber", phoneNumber)
+                                        .putExtra("eMail", eMail)
+                                        .putExtra("lastOnline", "long ago")
+                                        .putExtra("position", position));
+
+
+                            }else {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "not succeed try later", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "failed to retrive old data, try again later", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("username", userName);
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+
+    }
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("Service status", "Running");
+                return true;
+            }
+        }
+        Log.i ("Service status", "Not running");
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        //stopService(mServiceIntent);
+        Common.userStatus = Common.offlineStatus;
+        Log.i("tag", "user offline");
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("restartservice");
+        broadcastIntent.setClass(this, Restarter.class);
+        this.sendBroadcast(broadcastIntent);
+        super.onDestroy();
     }
 
     private void reFreshFromDataBase() {

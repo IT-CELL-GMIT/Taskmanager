@@ -12,6 +12,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.contentcapture.ContentCaptureContext;
 
@@ -43,12 +45,27 @@ public class FeedsActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Common.userStatus = Common.onlineStatus;
+                Log.i("tag", "user online");
+            }
+        }, 2000);
+
         setUpWithViewPager(binding.viewPager);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
         reFressData();
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Common.userStatus = Common.offlineStatus;
+        Log.i("tag", "user offline");
     }
 
     private void reFressData() {

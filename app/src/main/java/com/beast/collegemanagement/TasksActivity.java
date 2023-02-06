@@ -12,6 +12,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -43,11 +45,26 @@ public class TasksActivity extends AppCompatActivity {
         sp = getSharedPreferences("FILE_NAME", MODE_PRIVATE);
         editor = sp.edit();
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Common.userStatus = Common.onlineStatus;
+                Log.i("tag", "user online");
+            }
+        }, 2000);
+
         setUpWithViewPager(binding.viewPager);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
         reFressData();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Common.userStatus = Common.offlineStatus;
+        Log.i("tag", "user offline");
     }
 
     private void setToolBar() {

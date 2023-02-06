@@ -31,6 +31,20 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <receiver
+            android:name=".Restarter"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="restartservice" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".YourService"
+            android:enabled="true" />
+
         <activity
             android:name=".MyActivitiesActivity"
             android:exported="false">
@@ -184,6 +198,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTop"
             android:exported="false" />
 
         <meta-data

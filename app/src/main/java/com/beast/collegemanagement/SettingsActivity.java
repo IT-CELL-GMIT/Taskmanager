@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,6 +33,14 @@ public class SettingsActivity extends AppCompatActivity {
         Glide.with(context).load(Common.getProfilePic(context)).into(binding.mainProfilePic);
         binding.username.setText(Common.getUserName(context));
         binding.tvPosition.setText(Common.getPosition(context));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Common.userStatus = Common.onlineStatus;
+                Log.i("tag", "user online");
+            }
+        }, 2000);
 
         binding.profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +90,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         reFressData();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Common.userStatus = Common.offlineStatus;
+        Log.i("tag", "user offline");
     }
 
     private void reFressData() {

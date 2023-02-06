@@ -27,6 +27,9 @@ public class Common {
     public static List<String> commonList = new ArrayList<>();
     public static List<String> commonPickList = new ArrayList<>();
 
+    public static List<String> friendList = new ArrayList<>();
+    public static List<String> chatList = new ArrayList<>();
+
     static String MainUrl = "https://biochemical-damping.000webhostapp.com/";
 
     public static String getMainUrl() {
@@ -35,6 +38,25 @@ public class Common {
     public static String getBaseUrl() {
         return MainUrl + "Management%20of%20College/";
     }
+
+    
+    public static String notificationType = "Notification";
+    public static String chatNotificationType = "ChatNotification";
+
+    public static String notification = "notification";
+    public static String friendNotification = "FriendNotification";
+    public static String chatNotification = "ChatNotification";
+
+    public static String friendNotificationID = "Friends Notification";
+    public static String friendNotificationName = "Friend Request Notifications";
+
+    public static String chatNotificationID = "Chats Notification";
+    public static String chatNotificationName = "Chats Notification";
+
+    public static String userStatus = "offline";
+
+    public static String offlineStatus = "offline";
+    public static String onlineStatus = "online";
 
     public static Bitmap IMAGE_BITMAP;
 
