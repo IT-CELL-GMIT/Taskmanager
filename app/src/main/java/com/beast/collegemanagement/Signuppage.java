@@ -42,7 +42,8 @@ public class Signuppage extends AppCompatActivity {
     Uri imagePath;
     ProgressDialog progressDialog;
     String API_SIGNUP_COLLEGEMANAGEMENT = Common.getBaseUrl() + "singupincollegemanagement.php";
-    String USER_CHECK = Common.getBaseUrl() + "checkusername.php";
+//    String USER_CHECK = Common.getBaseUrl() + "checkusername.php";
+    String USER_CHECK ="https://www.zocarro.net/task_manager/Management%20of%20College/checkusername.php";
     String API_USERID = Common.getBaseUrl() + "fetchuserid.php";
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -84,6 +85,7 @@ public class Signuppage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                Toast.makeText(Signuppage.this, "sign up", Toast.LENGTH_SHORT).show();
                 if (binding.userName.getText().toString().trim().contains(" ")){
                     Toast.makeText(Signuppage.this, "spaces are not allowed in Username", Toast.LENGTH_SHORT).show();
                 }

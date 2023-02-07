@@ -30,7 +30,11 @@ public class Common {
     public static List<String> friendList = new ArrayList<>();
     public static List<String> chatList = new ArrayList<>();
 
-    static String MainUrl = "https://biochemical-damping.000webhostapp.com/";
+//    "http://www.zocarro.net/task_manager/Management%20of%20College/connection.php"
+
+    static String MainUrl = "https://www.zocarro.net/task_manager/";
+
+//    "http://www.zocarro.net/task_manager/Management%20of%20College/singupincollegemanagement.php"
 
     public static String getMainUrl() {
         return MainUrl;
