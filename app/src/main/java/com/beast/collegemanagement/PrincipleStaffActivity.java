@@ -32,7 +32,7 @@ public class PrincipleStaffActivity extends AppCompatActivity {
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     String positionStatus;
-    String API_CHANGE_POSITION = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/updateposition.php";
+    String API_CHANGE_POSITION = Common.getBaseUrl() + "updateposition.php";
     ProgressDialog progressDialog;
 
     @Override

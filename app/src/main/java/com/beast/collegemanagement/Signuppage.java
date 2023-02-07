@@ -41,9 +41,9 @@ public class Signuppage extends AppCompatActivity {
     boolean profilePicSelect = false;
     Uri imagePath;
     ProgressDialog progressDialog;
-    String API_SIGNUP_COLLEGEMANAGEMENT = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/singupincollegemanagement.php";
-    String USER_CHECK = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/checkusername.php";
-    String API_USERID = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/fetchuserid.php";
+    String API_SIGNUP_COLLEGEMANAGEMENT = Common.getBaseUrl() + "singupincollegemanagement.php";
+    String USER_CHECK = Common.getBaseUrl() + "checkusername.php";
+    String API_USERID = Common.getBaseUrl() + "fetchuserid.php";
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     String signStatus = "";

@@ -42,7 +42,7 @@ public class AddStaffActivity extends AppCompatActivity {
     StaffModel model;
     List<StaffModel> list;
 
-    String API_FETCH_ALLDATA = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/fetchalldata.php";
+    String API_FETCH_ALLDATA = Common.getBaseUrl() + "fetchalldata.php";
 
     ProgressDialog progressDialog;
 

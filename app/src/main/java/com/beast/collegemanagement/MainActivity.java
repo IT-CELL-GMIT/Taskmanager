@@ -83,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
 
-    String API_UPDATE_PROFILEPIC = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/updateprofilepic.php";
-    String API_USERID = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/fetchuserid.php";
-    String API_CHANGE_FULLNAME = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/changefullname.php";
-    String API_FETCHDATA = "https://biochemical-damping.000webhostapp.com/Management%20of%20College/fetchuserdata.php";
+    String API_UPDATE_PROFILEPIC = Common.getBaseUrl() + "updateprofilepic.php";
+    String API_USERID = Common.getBaseUrl() + "fetchuserid.php";
+    String API_CHANGE_FULLNAME = Common.getBaseUrl() + "changefullname.php";
+    String API_FETCHDATA = Common.getBaseUrl() + "fetchuserdata.php";
     Uri imagePath;
 
     ProgressDialog progressDialog;
