@@ -182,7 +182,7 @@ public class ChatsActivity extends AppCompatActivity {
             public void run() {
                 while (true) {
                     try {
-                        sleep(500);
+                        sleep(200);
                         getChat();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
