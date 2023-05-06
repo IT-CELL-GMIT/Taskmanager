@@ -32,7 +32,9 @@ public class Common {
 
 //    "http://www.zocarro.net/task_manager/Management%20of%20College/connection.php"
 
-    static String MainUrl = "https://www.zocarro.net/task_manager/";
+//    static String MainUrl = "https://www.zocarro.net/task_manager/";
+
+    static String MainUrl = "https://livekitab.com/TaskManager/";
 
 //    "http://www.zocarro.net/task_manager/Management%20of%20College/singupincollegemanagement.php"
 
@@ -40,8 +42,10 @@ public class Common {
         return MainUrl;
     }
     public static String getBaseUrl() {
-        return MainUrl + "Management%20of%20College/";
+        return MainUrl;
     }
+
+//    "http://livekitab.com/TaskManager/connection.php"   connection file carzclinic server
 
     
     public static String notificationType = "Notification";

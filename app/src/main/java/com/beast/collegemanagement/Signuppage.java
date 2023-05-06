@@ -43,7 +43,7 @@ public class Signuppage extends AppCompatActivity {
     ProgressDialog progressDialog;
     String API_SIGNUP_COLLEGEMANAGEMENT = Common.getBaseUrl() + "singupincollegemanagement.php";
 //    String USER_CHECK = Common.getBaseUrl() + "checkusername.php";
-    String USER_CHECK ="https://www.zocarro.net/task_manager/Management%20of%20College/checkusername.php";
+    String USER_CHECK =Common.getBaseUrl() + "checkusername.php";
     String API_USERID = Common.getBaseUrl() + "fetchuserid.php";
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -153,6 +153,7 @@ public class Signuppage extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 Toast.makeText(Signuppage.this, "something went wrong, try again later", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Signuppage.this, error.toString(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
             }
